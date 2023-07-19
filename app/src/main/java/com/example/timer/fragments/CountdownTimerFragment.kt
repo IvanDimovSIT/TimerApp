@@ -37,6 +37,9 @@ class CountdownTimerFragment : Fragment, TimerUpdatable {
         if(view == null || !timer.isStarted)
             return
         val timeRemaining = calculateTimeRemaining(currentTime)
+        if(timeRemaining <= 0)
+            return
+
         view?.findViewById<TextView>(R.id.txtCountdownTimer)?.text = TimerFormatter.formatTimer(timeRemaining)
         view?.findViewById<ProgressBar>(R.id.progCountdown)
             ?.setProgress(100 - (timer.duration * 1000 - timeRemaining).toInt() * 100 / (timer.duration*1000).toInt()  ,false)
