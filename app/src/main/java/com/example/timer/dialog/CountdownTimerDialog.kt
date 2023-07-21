@@ -18,8 +18,18 @@ class CountdownTimerDialog(private val observer: CountdownTimerDialogObserver) :
     }
 
     private fun addTimer(view: View){
-        val minutes: Long = view.findViewById<EditText>(R.id.editAddCountdownMinutes).text.toString().toLong()
-        val secconds: Long = view.findViewById<EditText>(R.id.editAddCountdownSecconds).text.toString().toLong()
+        var minutes : Long
+        var secconds : Long
+        try {
+             minutes = view.findViewById<EditText>(R.id.editAddCountdownMinutes).text.toString().toLong()
+        }catch (e: NumberFormatException){
+            minutes = 0
+        }
+        try {
+            secconds = view.findViewById<EditText>(R.id.editAddCountdownSecconds).text.toString().toLong()
+        }catch (e: NumberFormatException){
+            secconds  =0
+        }
         observer.onAdded(CountdownTimer(secconds+minutes*60 ,observer.getId(), Date()))
     }
 

@@ -70,6 +70,16 @@ class TimerAdapter(private val observer: TimerAdapterSelectTimerObserver) : Recy
         }
     }
 
+    fun remove(timer: Timer){
+        for(i in timers){
+            if(i.id != timer.id)
+                continue
+            timers.remove(i)
+            break
+        }
+        notifyDataSetChanged()
+    }
+
     fun update(timer: Timer){
         for(i in 0..timers.size){
             if(timers[i].id == timer.id){

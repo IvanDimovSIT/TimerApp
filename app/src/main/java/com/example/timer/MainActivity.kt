@@ -70,6 +70,7 @@ class MainActivity : FragmentActivity() {
         addTimerButtonListener()
         addStartButtonListener()
         addCountdownButtonListener()
+        addRemoveButtonListener()
 
         Thread(object : Runnable{
             override fun run() {
@@ -83,6 +84,16 @@ class MainActivity : FragmentActivity() {
                 }
             }
         }).start()
+    }
+
+    private fun addRemoveButtonListener() {
+        findViewById<Button>(R.id.btnReset).setOnClickListener {
+            if(timerUpdatable == null)
+                return@setOnClickListener
+
+            timerAdapter.remove(timerUpdatable!!.getTimer())
+            supportFragmentManager.beginTransaction().remove(supportFragmentManager.findFragmentById(R.id.frmTimer)!!).commit()
+        }
     }
 
     private fun addCountdownButtonListener() {

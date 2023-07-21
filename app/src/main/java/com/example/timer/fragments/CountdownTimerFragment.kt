@@ -28,7 +28,7 @@ class CountdownTimerFragment : Fragment, TimerUpdatable {
     ): View? {
         view = inflater.inflate(R.layout.countdown_timer_layout, container, false)
         view?.findViewById<TextView>(R.id.txtCountdownTimer)?.setText(TimerFormatter.formatTimer(timer.duration*1000 - timer.offset))
-        view?.findViewById<ProgressBar>(R.id.progCountdown)?.setProgress(100)
+        view?.findViewById<ProgressBar>(R.id.progCountdown)?.setProgress(0)
 
         return view
     }
@@ -42,7 +42,7 @@ class CountdownTimerFragment : Fragment, TimerUpdatable {
 
         view?.findViewById<TextView>(R.id.txtCountdownTimer)?.text = TimerFormatter.formatTimer(timeRemaining)
         view?.findViewById<ProgressBar>(R.id.progCountdown)
-            ?.setProgress(100 - (timer.duration * 1000 - timeRemaining).toInt() * 100 / (timer.duration*1000).toInt()  ,false)
+            ?.setProgress((timer.duration * 1000 - timeRemaining).toInt() * 100 / (timer.duration*1000).toInt()  ,false)
     }
 
     override fun startOrStop() {
