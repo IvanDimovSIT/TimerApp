@@ -3,11 +3,16 @@ package com.example.timer.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.timer.R
 import com.example.timer.model.CountdownTimer
 import com.example.timer.model.Timer
+import com.example.timer.service.CountdownTimerCalculator
+import com.example.timer.service.TimerCalculator
+import com.example.timer.service.TimerFormatter
+import java.util.Date
 
 class TimerAdapter(private val observer: TimerAdapterSelectTimerObserver) : RecyclerView.Adapter<TimerAdapter.TimerViewHolder>() {
     class TimerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
@@ -46,7 +51,7 @@ class TimerAdapter(private val observer: TimerAdapterSelectTimerObserver) : Recy
         if(viewType == VIEW_TYPE_TIMER) {
             view = LayoutInflater.from(parent.context).inflate(R.layout.timer_recycler_view_item, parent, false)
         }else{
-            view = LayoutInflater.from(parent.context).inflate(R.layout.timer_recycler_view_item, parent, false)
+            view = LayoutInflater.from(parent.context).inflate(R.layout.countdown_timer_recycler_view_item, parent, false)
         }
 
         return TimerViewHolder(view)
@@ -61,12 +66,20 @@ class TimerAdapter(private val observer: TimerAdapterSelectTimerObserver) : Recy
             observer.timerSelected(timers[position])
         }
 
-        if(timers[position] is Timer){
+        if(timers[position] is CountdownTimer){
+            val timer: CountdownTimer = timers[position] as CountdownTimer
+            val timeRemaining = CountdownTimerCalculator.calculateRemainingTime(timer, Date())
+            holder.itemView.findViewById<TextView>(R.id.txtCoutndownTimerItem).setText("Обратно броене "+timer.id.toString())
+            holder.itemView.findViewById<TextView>(R.id.txtItemTimeRemaining).setText(
+                TimerFormatter.formatTimer(
+                    timeRemaining
+                )
+            )
+            holder.itemView.findViewById<ProgressBar>(R.id.progCountdownItem).progress = 0
+        }else{
             val timer: Timer = timers[position]
             holder.itemView.findViewById<TextView>(R.id.txtTimerItem).setText("Хронометър "+timer.id.toString())
-        }else{//Countdown timer
-            val timer: CountdownTimer = timers[position] as CountdownTimer
-            holder.itemView.findViewById<TextView>(R.id.txtTimerItem).setText("Обратно броене "+timer.id.toString())
+            holder.itemView.findViewById<TextView>(R.id.txtItemTimePassed).setText(TimerFormatter.formatTimer(TimerCalculator.calculatePassedTime(timer, Date())))
         }
     }
 
@@ -86,6 +99,29 @@ class TimerAdapter(private val observer: TimerAdapterSelectTimerObserver) : Recy
                 timers[i] = timer
                 notifyItemChanged(i)
                 return
+            }
+        }
+    }
+
+    fun updateTimersTime(currentTime: Date, recyclerView: RecyclerView){
+        for(i in 0 until timers.size){
+            if(!timers[i].isStarted)
+                continue
+
+            val view : View = recyclerView.findViewHolderForAdapterPosition(i)?.itemView!!
+            if(timers[i] is CountdownTimer){
+                val timeRemaining : Long =
+                    CountdownTimerCalculator.calculateRemainingTime(timers[i] as CountdownTimer, currentTime)
+                if(timeRemaining < 0)
+
+
+                view.findViewById<TextView>(R.id.txtItemTimeRemaining).text =
+                    TimerFormatter.formatTimer(timeRemaining)
+                view.findViewById<ProgressBar>(R.id.progCountdownItem).progress =
+                    ((timeRemaining*100)/((timers[i] as CountdownTimer).duration * 1000 * 100 )).toInt()
+            }else{
+                view.findViewById<TextView>(R.id.txtItemTimePassed).text =
+                    TimerFormatter.formatTimer(TimerCalculator.calculatePassedTime(timers[i], currentTime))
             }
         }
     }

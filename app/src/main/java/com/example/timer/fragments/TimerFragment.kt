@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.example.timer.R
 import com.example.timer.model.Timer
+import com.example.timer.service.TimerCalculator
 import com.example.timer.service.TimerFormatter
 import java.util.Date
 
@@ -34,7 +35,7 @@ class TimerFragment : Fragment, TimerUpdatable {
     override fun updateTimer(currentTime: Date){
         if(view == null || !timer.isStarted)
             return
-        view?.findViewById<TextView>(R.id.txtTimer)?.text  = TimerFormatter.formatTimer(currentTime.time - timer.startTimer.time + timer.offset)
+        view?.findViewById<TextView>(R.id.txtTimer)?.text  = TimerFormatter.formatTimer(TimerCalculator.calculatePassedTime(timer, currentTime))
     }
 
     override fun startOrStop() {

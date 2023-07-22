@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import com.example.timer.R
 import com.example.timer.model.CountdownTimer
 import com.example.timer.model.Timer
+import com.example.timer.service.CountdownTimerCalculator
 import com.example.timer.service.TimerFormatter
 import java.util.Date
 
@@ -36,7 +37,7 @@ class CountdownTimerFragment : Fragment, TimerUpdatable {
     override fun updateTimer(currentTime: Date){
         if(view == null || !timer.isStarted)
             return
-        val timeRemaining = calculateTimeRemaining(currentTime)
+        val timeRemaining = CountdownTimerCalculator.calculateRemainingTime(timer ,currentTime)
         if(timeRemaining <= 0)
             return
 
@@ -53,10 +54,6 @@ class CountdownTimerFragment : Fragment, TimerUpdatable {
             timer.isStarted = true
             timer.startTimer = Date()
         }
-    }
-
-    private fun calculateTimeRemaining(currentTimer: Date): Long {
-        return timer.startTimer.time + timer.duration * 1000 - currentTimer.time - timer.offset
     }
 
     override fun getTimer(): Timer {

@@ -78,8 +78,11 @@ class MainActivity : FragmentActivity() {
                     Thread.sleep(1000)
                     if(timerUpdatable == null)
                         continue
+
+                    val currentTime = Date()
                     runOnUiThread {
-                        timerUpdatable!!.updateTimer(Date())
+                        timerUpdatable!!.updateTimer(currentTime)
+                        timerAdapter.updateTimersTime(currentTime, recyclerView)
                     }
                 }
             }

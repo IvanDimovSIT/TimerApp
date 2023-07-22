@@ -3,11 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:padding="10dp">
 
     <TextView
-        android:id="@+id/txtTimerItem"
+        android:id="@+id/txtCoutndownTimerItem"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="TextView"
@@ -16,12 +16,22 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/txtItemTimePassed"
+        android:id="@+id/txtItemTimeRemaining"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
         android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="@+id/txtTimerItem"
-        app:layout_constraintStart_toEndOf="@+id/txtTimerItem"
-        app:layout_constraintTop_toTopOf="@+id/txtTimerItem" />
+        app:layout_constraintBottom_toBottomOf="@+id/txtCoutndownTimerItem"
+        app:layout_constraintStart_toEndOf="@+id/txtCoutndownTimerItem"
+        app:layout_constraintTop_toTopOf="@+id/txtCoutndownTimerItem" />
+
+    <ProgressBar
+        android:id="@+id/progCountdownItem"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="100dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="30dp"
+        app:layout_constraintBottom_toBottomOf="@+id/txtItemTimeRemaining"
+        app:layout_constraintStart_toEndOf="@+id/txtItemTimeRemaining"
+        app:layout_constraintTop_toTopOf="@+id/txtItemTimeRemaining" />
 </androidx.constraintlayout.widget.ConstraintLayout>
