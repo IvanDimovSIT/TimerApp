@@ -37,19 +37,20 @@ class TimerAdapter(private val observer: TimerAdapterSelectTimerObserver) : Recy
         }
     }
 
-    public fun getId() : Int{
-        return idCounter++;
+    fun getId() : Int{
+        return idCounter++
     }
 
-    public fun addTimer(timer: Timer){
+    fun addTimer(timer: Timer){
         timers.add(timers.size, timer)
         notifyItemInserted(timers.size-1)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TimerViewHolder {
-        var view: View
+        val view: View
         if(viewType == VIEW_TYPE_TIMER) {
             view = LayoutInflater.from(parent.context).inflate(R.layout.timer_recycler_view_item, parent, false)
+            view.findViewById<TextView>(R.id.txtItemTimePassed).text = "00:00"
         }else{
             view = LayoutInflater.from(parent.context).inflate(R.layout.countdown_timer_recycler_view_item, parent, false)
         }
@@ -84,20 +85,19 @@ class TimerAdapter(private val observer: TimerAdapterSelectTimerObserver) : Recy
     }
 
     fun remove(timer: Timer){
-        for(i in timers){
-            if(i.id != timer.id)
+        for(i in 0 until timers.size){
+            if(timers[i].id != timer.id)
                 continue
-            timers.remove(i)
+            timers.removeAt(i)
+            notifyItemRemoved(i)
             break
         }
-        notifyDataSetChanged()
     }
 
     fun update(timer: Timer){
         for(i in 0..timers.size){
             if(timers[i].id == timer.id){
                 timers[i] = timer
-                notifyItemChanged(i)
                 return
             }
         }
@@ -113,6 +113,7 @@ class TimerAdapter(private val observer: TimerAdapterSelectTimerObserver) : Recy
                 val timeRemaining : Long =
                     CountdownTimerCalculator.calculateRemainingTime(timers[i] as CountdownTimer, currentTime)
                 if(timeRemaining < 0)
+                    continue
 
 
                 view.findViewById<TextView>(R.id.txtItemTimeRemaining).text =
