@@ -70,17 +70,22 @@ class TimerAdapter(private val observer: TimerAdapterSelectTimerObserver) : Recy
         if(timers[position] is CountdownTimer){
             val timer: CountdownTimer = timers[position] as CountdownTimer
             val timeRemaining = CountdownTimerCalculator.calculateRemainingTime(timer, Date())
-            holder.itemView.findViewById<TextView>(R.id.txtCoutndownTimerItem).setText("Обратно броене "+timer.id.toString())
+            holder.itemView.findViewById<TextView>(R.id.txtCoutndownTimerItem)
+                .setText("Обратно броене "+timer.id.toString())
             holder.itemView.findViewById<TextView>(R.id.txtItemTimeRemaining).setText(
                 TimerFormatter.formatTimer(
                     timeRemaining
                 )
             )
-            holder.itemView.findViewById<ProgressBar>(R.id.progCountdownItem).progress = 0
+            //holder.itemView.findViewById<ProgressBar>(R.id.progCountdownItem).progress = 0
         }else{
             val timer: Timer = timers[position]
-            holder.itemView.findViewById<TextView>(R.id.txtTimerItem).setText("Хронометър "+timer.id.toString())
-            holder.itemView.findViewById<TextView>(R.id.txtItemTimePassed).setText(TimerFormatter.formatTimer(TimerCalculator.calculatePassedTime(timer, Date())))
+            holder.itemView.findViewById<TextView>(R.id.txtTimerItem)
+                .setText("Хронометър "+timer.id.toString())
+            holder.itemView.findViewById<TextView>(R.id.txtItemTimePassed)
+                .setText(TimerFormatter.formatTimer(
+                    TimerCalculator.calculatePassedTime(timer, Date()))
+                )
         }
     }
 
@@ -108,7 +113,8 @@ class TimerAdapter(private val observer: TimerAdapterSelectTimerObserver) : Recy
             if(!timers[i].isStarted)
                 continue
 
-            val view : View = recyclerView.findViewHolderForAdapterPosition(i)?.itemView!!
+            val view : View = recyclerView.findViewHolderForAdapterPosition(i)?.itemView ?: continue
+
             if(timers[i] is CountdownTimer){
                 val timeRemaining : Long =
                     CountdownTimerCalculator.calculateRemainingTime(timers[i] as CountdownTimer, currentTime)
@@ -119,7 +125,7 @@ class TimerAdapter(private val observer: TimerAdapterSelectTimerObserver) : Recy
                 view.findViewById<TextView>(R.id.txtItemTimeRemaining).text =
                     TimerFormatter.formatTimer(timeRemaining)
                 view.findViewById<ProgressBar>(R.id.progCountdownItem).progress =
-                    ((timeRemaining*100)/((timers[i] as CountdownTimer).duration * 1000 * 100 )).toInt()
+                    (100 - (timeRemaining*100)/((timers[i] as CountdownTimer).duration * 1000 )).toInt()
             }else{
                 view.findViewById<TextView>(R.id.txtItemTimePassed).text =
                     TimerFormatter.formatTimer(TimerCalculator.calculatePassedTime(timers[i], currentTime))

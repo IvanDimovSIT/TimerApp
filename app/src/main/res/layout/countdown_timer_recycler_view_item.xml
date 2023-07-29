@@ -31,6 +31,8 @@
         android:layout_width="100dp"
         android:layout_height="20dp"
         android:layout_marginStart="30dp"
+        android:max="100"
+        android:progress="0"
         app:layout_constraintBottom_toBottomOf="@+id/txtItemTimeRemaining"
         app:layout_constraintStart_toEndOf="@+id/txtItemTimeRemaining"
         app:layout_constraintTop_toTopOf="@+id/txtItemTimeRemaining" />
